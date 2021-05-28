@@ -1,7 +1,17 @@
 const express = require("express");
 const mongoose = require("mongoose");
-
+const cors = require("cors")
+const userRouter = require("./routes/user");
 const app = express();
+
+app.use(express.json());
+app.use(cors());
+app.use(userRouter);
+
+const PORT = process.env.PORT||3001;
+app.listen(PORT, () => {
+  console.log(`connected at ${PORT}`);
+})
 
 mongoose.connect(
   "mongodb://localhost:127.0.0.1:27017/redditClone",

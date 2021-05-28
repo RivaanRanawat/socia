@@ -1,11 +1,34 @@
-import React from "react";
+import React, { useState, useContext } from "react";
 import { Form, Button, Card, Alert, Container } from "react-bootstrap";
+import axios from "axios";
+import UserContext from "../context/UserContext";
+import { useHistory } from "react-router-dom";
 
 function Login() {
-  const error = "";
-  var loading = false;
-  function handleSubmit(e) {
+  const [email, setEmail] = useState();
+  const [password, setPassword] = useState();
+  const [error, setError] = useState();
+  const [loading, setLoading] = useState(false);
+  const history = useHistory();
+  const { setUserData } = useContext(UserContext);
+
+  async function handleSubmit(e) {
     e.preventDefault();
+    setLoading(true);
+    try {
+      const loginUser = { email, password };
+      const loginRes = await axios.post("http://localhost:3001/login", loginUser);
+      setUserData({
+        token: loginRes.data.token,
+        user: loginRes.data.user,
+      });
+
+      localStorage.setItem("auth-token", loginRes.data.token);
+      history.push("/");
+    } catch (err) {
+      setLoading(false);
+      err.response.data.msg && setError(err.response.data.msg);
+    }
   }
   return (
     <Container
@@ -21,11 +44,11 @@ function Login() {
               <Form onSubmit={handleSubmit}>
                 <Form.Group id="email">
                   <Form.Label>Email</Form.Label>
-                  <Form.Control type="email" required />
+                  <Form.Control type="email" required onChange={e => setEmail(e.target.value)}/>
                 </Form.Group>
                 <Form.Group id="password">
                   <Form.Label>Password</Form.Label>
-                  <Form.Control type="password" required />
+                  <Form.Control type="password" required onChange={e=> setPassword(e.target.value)}/>
                 </Form.Group>
                 <Button disabled={loading} className="w-100 mt-2" type="submit">
                   Log In

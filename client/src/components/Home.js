@@ -1,19 +1,19 @@
 import React, { useEffect, useContext } from "react";
-import { useHistory, Link } from "react-router-dom";
+import { Link } from "react-router-dom";
 import UserContext from "../context/UserContext";
+import Feed from "./Feed";
+import NavBar from "./NavBar";
 
 function Home() {
   const { userData } = useContext(UserContext);
-  const history = useHistory();
-  useEffect(() => {
-    if (!userData.user) {
-      history.push("/login");
-    }
-  }, []);
+
   return (
     <div>
       {userData.user ? (
-        <h1>Welcome {userData.user.username}</h1>
+        <>
+          <NavBar />
+          <Feed />
+        </>
       ) : (
         <>
           <h2>You are not logged in</h2>

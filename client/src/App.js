@@ -11,20 +11,19 @@ function App() {
     token: undefined,
     user: undefined,
   });
-
   useEffect(() => {
-    const isLoggedIn = async () => {
+    const checkLoggedIn = async () => {
       let token = localStorage.getItem("auth-token");
       if (token === null) {
         localStorage.setItem("auth-token", "");
         token = "";
       }
-      const tokenRes = await axios.post(
+      const tokenResponse = await axios.post(
         "http://localhost:3001/tokenIsValid",
         null,
         { headers: { "x-auth-token": token } }
       );
-      if (tokenRes.data) {
+      if (tokenResponse.data) {
         const userRes = await axios.get("http://localhost:3001/", {
           headers: { "x-auth-token": token },
         });
@@ -34,8 +33,9 @@ function App() {
         });
       }
     };
-    isLoggedIn();
+    checkLoggedIn();
   }, []);
+
   return (
     <BrowserRouter>
       <UserContext.Provider value={{ userData, setUserData }}>

@@ -2,6 +2,7 @@ import axios from "axios";
 import React, { useState, useContext } from "react";
 import { Form, Button, Card, Alert, Container } from "react-bootstrap";
 import { useHistory } from "react-router";
+import { Link } from "react-router-dom";
 import UserContext from "../context/UserContext";
 
 function Signup() {
@@ -88,7 +89,9 @@ function Signup() {
               </Form>
             </Card.Body>
           </Card>
-          <div className="w-100 text-center mt-2">Already have an account?</div>
+          <div className="w-100 text-center mt-2">
+            Already have an account?<Link to="/login">Log in</Link>
+          </div>
         </>
       </div>
     </Container>

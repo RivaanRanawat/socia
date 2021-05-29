@@ -2,7 +2,7 @@ import React, { useState, useContext } from "react";
 import { Form, Button, Card, Alert, Container } from "react-bootstrap";
 import axios from "axios";
 import UserContext from "../context/UserContext";
-import { useHistory } from "react-router-dom";
+import { useHistory, Link } from "react-router-dom";
 
 function Login() {
   const [email, setEmail] = useState();
@@ -56,7 +56,7 @@ function Login() {
               </Form>
             </Card.Body>
           </Card>
-          <div className="w-100 text-center mt-2">Need an account?</div>
+          <div className="w-100 text-center mt-2">Need an account?<Link to="/signup">Sign up</Link></div>
         </>
       </div>
     </Container>

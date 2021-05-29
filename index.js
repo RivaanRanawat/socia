@@ -2,11 +2,13 @@ const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors")
 const userRouter = require("./routes/user");
+const communityRouter = require("./routes/community");
 const app = express();
 
 app.use(express.json());
 app.use(cors());
 app.use(userRouter);
+app.use(communityRouter);
 
 const PORT = process.env.PORT||3001;
 app.listen(PORT, () => {

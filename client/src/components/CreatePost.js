@@ -11,6 +11,7 @@ function CreatePost() {
   const [selectedCommunity, setSelectedCommunity] = useState();
   const [loading, setLoading] = useState(false);
   const [communities, setCommunities] = useState([]);
+  const [image, setImage] = useState();
   const history = useHistory();
 
   const [userData, setUserData] = useState({
@@ -23,6 +24,7 @@ function CreatePost() {
     setLoading(true);
     try {
       const submitPost = { title, description, community: selectedCommunity };
+      console.log(selectedCommunity);
       const res = await axios.post(
         "http://localhost:3001/create-post",
         submitPost,
@@ -57,6 +59,7 @@ function CreatePost() {
         }
       );
       commRes.data.map((e) => setCommunities((oldArr) => [...oldArr, e.name]));
+      setSelectedCommunity(commRes.data[0].name);
     };
     fetchCommunities();
   }, []);
@@ -79,6 +82,16 @@ function CreatePost() {
                     type="text"
                     required
                     onChange={(e) => setTitle(e.target.value)}
+                  />
+                </Form.Group>
+                <Form.Group>
+                  <Form.File
+                    className="position-relative mt-2"
+                    name="file"
+                    accept="image/*"
+                    onChange={e => setImage(e.target.files[0])}
+                    id="validationFormik107"
+                    feedbackTooltip
                   />
                 </Form.Group>
                 <Form.Group id="description">

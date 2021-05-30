@@ -9,8 +9,15 @@ const postSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  upVotedBy:[{type: String}],
-  downVotedBy: [{type: String}],
+  community: {
+    type: String,
+    required: true,
+  },
+  image: {
+    type: Buffer
+  },
+  upVotedBy: [{ type: String }],
+  downVotedBy: [{ type: String }],
   title: {
     type: String,
     required: true,

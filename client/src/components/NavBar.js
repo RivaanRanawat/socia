@@ -6,8 +6,8 @@ function NavBar() {
     <Navbar bg="light" variant="light">
       <Navbar.Brand href="#home">Socia</Navbar.Brand>
       <Nav className="mr-auto">
-        <Nav.Link href="#home">Create Post</Nav.Link>
-        <Nav.Link href="#features">Create Community</Nav.Link>
+        <Nav.Link href="create-post">Create Post</Nav.Link>
+        <Nav.Link href="create-community">Create Community</Nav.Link>
       </Nav>
       <Navbar.Collapse className="justify-content-end">
         <Form inline>

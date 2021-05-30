@@ -46,7 +46,6 @@ postRoute.get("/posts", auth, async (req, res) => {
 // get one post
 postRoute.get("/post/:id", auth, async (req, res) => {
   const id = req.params.id;
-  console.log(id)
   try {
     const existingPost = await Post.findById(id);
     if (!existingPost) {

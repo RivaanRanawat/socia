@@ -5,6 +5,8 @@ import { BrowserRouter, Switch, Route } from "react-router-dom";
 import axios from "axios";
 import { useState, useEffect } from "react";
 import UserContext from "./context/UserContext";
+import CreatePost from "./components/CreatePost";
+import CreateCommunity from "./components/CreateCommunity";
 
 function App() {
   const [userData, setUserData] = useState({
@@ -43,6 +45,8 @@ function App() {
           <Route exact path="/" component={Home} />
           <Route path="/signup" component={Signup} />
           <Route path="/login" component={Login} />
+          <Route path="/create-post" component={CreatePost} />
+          <Route path="/create-community" component={CreateCommunity} />
         </Switch>
       </UserContext.Provider>
     </BrowserRouter>

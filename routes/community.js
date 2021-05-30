@@ -38,7 +38,6 @@ communityRouter.post("/create-community", auth, async (req, res) => {
 });
 
 // Showing all the communities
-
 communityRouter.get("/communities", auth, async (req, res) => {
   try {
     const allCommunities = await Community.find({});

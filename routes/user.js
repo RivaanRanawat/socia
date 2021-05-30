@@ -1,7 +1,7 @@
 const express = require("express");
 const bcryptjs = require("bcryptjs");
 const User = require("../model/user");
-
+const Community = require("../model/community");
 const userRouter = express.Router();
 const jwt = require("jsonwebtoken");
 const auth = require("../middleware/auth");
@@ -38,7 +38,6 @@ userRouter.post("/signup", async (req, res) => {
 });
 
 // Login Route
-
 userRouter.post("/login", async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -65,6 +64,7 @@ userRouter.post("/login", async (req, res) => {
   }
 });
 
+// TO CHECK IF TOKEN IS VALID
 userRouter.post("/tokenIsValid", async (req, res) => {
   try {
     const token = req.header("x-auth-token");
@@ -79,6 +79,7 @@ userRouter.post("/tokenIsValid", async (req, res) => {
   }
 });
 
+// to get the users credentials
 userRouter.get("/", auth, async (req, res) => {
   const user = await User.findById(req.user);
   res.json({
@@ -86,5 +87,17 @@ userRouter.get("/", auth, async (req, res) => {
     id: user._id,
   });
 });
+
+
+// get communities user is a part of(working)
+userRouter.get("/user/community/:uid", auth, async (req, res) => {
+  const uid = req.params.uid;
+  try {
+    const community = await Community.find({subscribedBy: uid});
+    res.json(community);
+  } catch(err) {
+    res.status(500).json({error: err.message})
+  }
+})
 
 module.exports = userRouter;

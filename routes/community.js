@@ -4,6 +4,7 @@ const Community = require("../model/community");
 const communityRouter = express.Router();
 const auth = require("../middleware/auth");
 const User = require("../model/user");
+const Post = require("../model/post");
 
 // Creating a community
 communityRouter.post("/create-community", auth, async (req, res) => {
@@ -25,6 +26,7 @@ communityRouter.post("/create-community", auth, async (req, res) => {
       description,
       topic: topicDb,
       creator,
+      subscribedBy: [creator],
     });
     newCommunity = await newCommunity.save();
     let creatorDetails = await User.findById(creator);
@@ -40,24 +42,46 @@ communityRouter.post("/create-community", auth, async (req, res) => {
 communityRouter.get("/communities", auth, async (req, res) => {
   try {
     const allCommunities = await Community.find({});
-    res.json(allCommunities)
+    res.json(allCommunities);
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
 });
 
+// get a community by name
 communityRouter.get("/community/:name", auth, async (req, res) => {
-    const name = req.params.name;
-    console.log(name);
-    try {
-        const community = await Community.findOne({name});
-        if(!community) {
-            return res.status(400).json({msg: "Community with this name does not exist"})
-        }
-        res.json(community)
-    } catch(err) {
-        res.status(500).json({error: err.message})
+  const name = req.params.name;
+  console.log(name);
+  try {
+    const community = await Community.findOne({ name });
+    if (!community) {
+      return res
+        .status(400)
+        .json({ msg: "Community with this name does not exist" });
     }
-})
+    res.json(community);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// get a specific communities post
+communityRouter.get("/community/posts/:name", auth, async (req, res) => {
+  const name = req.params.name;
+  try {
+    const community = await Community.findOne({ name });
+    if (!community) {
+      return res
+        .status(404)
+        .json({ msg: "Community with this name does not exist" });
+    }
+    let psts = community.posts.map(async (post) => await Post.findById(post));
+
+    const results = await Promise.all(psts);
+    res.json(results);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
 
 module.exports = communityRouter;

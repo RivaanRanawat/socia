@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 
-const postSchema = mongoose.Schema({
+const postSchema = new mongoose.Schema({
   uid: {
     type: String,
     required: true,
@@ -9,22 +9,8 @@ const postSchema = mongoose.Schema({
     type: String,
     required: true,
   },
-  count: {
-    type: Number,
-    default: 0,
-  },
-  usersWhoCounted: [
-    {
-      userId: {
-        type: String,
-        required: true,
-      },
-      userCount: {
-        type: Number,
-        default: 0,
-      },
-    },
-  ],
+  upVotedBy:[{type: String}],
+  downVotedBy: [{type: String}],
   title: {
     type: String,
     required: true,

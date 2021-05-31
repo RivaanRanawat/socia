@@ -32,7 +32,17 @@ function CreatePost() {
           headers: { "x-auth-token": userData.token },
         }
       );
-      console.log(res);
+      if(image) {
+        const formData = new FormData();
+        formData.append("image", image)
+        await axios.post(
+          "http://localhost:3001/create-post/image",
+          formData,
+          {
+            headers: { "x-auth-token": userData.token, "post-id-token":  res.data._id},
+          }
+        );
+      }
       setLoading(false);
       history.push("/");
     } catch (err) {

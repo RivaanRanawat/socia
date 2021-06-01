@@ -42,12 +42,14 @@ function PostCard({ post }) {
                 <Col xs={11}>
                   <Card.Title>{post[5]}</Card.Title>
                   {post[7] != "" ? (
-                    <Card.Img
-                      style={{ height: "20rem" }}
-                      className="mt-1 mr-2"
-                      variant="top"
-                      src={post[7]}
-                    />
+                    <a href={post[7]}>
+                      <Card.Img
+                        style={{ height: "20rem" }}
+                        className="mt-1 mr-2"
+                        variant="top"
+                        src={post[7]}
+                      />
+                    </a>
                   ) : (
                     <></>
                   )}

@@ -1,11 +1,10 @@
-import React from 'react'
+import React from "react";
+import PostCard from "./PostCard";
 
 function Feed() {
-    return (
-        <div>
-            from feed
-        </div>
-    )
+  return (
+    <PostCard />
+  );
 }
 
-export default Feed
+export default Feed;

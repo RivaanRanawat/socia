@@ -1,16 +1,18 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Card, Container, Col, Row } from "react-bootstrap";
 import { BiUpvote, BiDownvote, BiComment } from "react-icons/bi";
 
-function PostCard() {
+function PostCard({ post }) {
+  const [count, setCount] = useState("0");
+
   return (
-    <Container style={{ minHeight: "100vh" }} className="mt-2">
+    <Container className="mt-2">
       <Row>
         <Col xs={2}></Col>
         <Col xs={7}>
           <Card>
             <Card.Header as="p">
-              Posted at <strong>r/battlestations</strong> by{" "}
+              Posted at <strong>r/{post[6]}</strong> by{" "}
               <strong>u/rivaanranawat</strong>
             </Card.Header>
             <Card.Body>
@@ -26,7 +28,7 @@ function PostCard() {
                     </Col>
                     <Col>
                       <h5 className="mt-1" style={{ cursor: "default" }}>
-                        01
+                        {count}
                       </h5>
                     </Col>
                     <Col xs={5}>
@@ -38,22 +40,24 @@ function PostCard() {
                   </Row>
                 </Col>
                 <Col xs={11}>
-                  <Card.Title>My Game</Card.Title>
-                  <Card.Img
-                    style={{ height: "20rem" }}
-                    className="mt-1 mr-2"
-                    variant="top"
-                    src="https://c.ndtvimg.com/2020-03/bthb68ug_virat-kohli-afp_625x300_27_March_20.jpg?output-quality=60&output-format=webp&downsize=555:*"
-                  />
-                  <Card.Text className="mt-1">
-                    This is my brilliant game lol idk how that makes sense
-                  </Card.Text>
+                  <Card.Title>{post[5]}</Card.Title>
+                  {post[7] != "" ? (
+                    <Card.Img
+                      style={{ height: "20rem" }}
+                      className="mt-1 mr-2"
+                      variant="top"
+                      src={post[7]}
+                    />
+                  ) : (
+                    <></>
+                  )}
+                  <Card.Text className="mt-1">{post[4]}</Card.Text>
                 </Col>
               </Row>
             </Card.Body>
           </Card>
         </Col>
-        <Col>Profile or something</Col>
+        <Col></Col>
       </Row>
     </Container>
   );

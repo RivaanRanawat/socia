@@ -23,26 +23,26 @@ function CreatePost() {
     e.preventDefault();
     setLoading(true);
     try {
-      const submitPost = { title, description, community: selectedCommunity };
+      let imageUrl = "";
+      if (image) {
+        const formData = new FormData();
+        formData.append("file", image);
+        formData.append("upload_preset", "redditClone")
+        const dataRes = await axios.post(
+          "https://api.cloudinary.com/v1_1/dukvdqevm/image/upload",
+          formData
+        );
+        imageUrl = dataRes.data.url
+      }
+      const submitPost = { title, description, community: selectedCommunity, imageUrl };
       console.log(selectedCommunity);
-      const res = await axios.post(
+      await axios.post(
         "http://localhost:3001/create-post",
         submitPost,
         {
           headers: { "x-auth-token": userData.token },
         }
       );
-      if(image) {
-        const formData = new FormData();
-        formData.append("image", image)
-        await axios.post(
-          "http://localhost:3001/create-post/image",
-          formData,
-          {
-            headers: { "x-auth-token": userData.token, "post-id-token":  res.data._id},
-          }
-        );
-      }
       setLoading(false);
       history.push("/");
     } catch (err) {
@@ -99,7 +99,7 @@ function CreatePost() {
                     className="position-relative mt-2"
                     name="file"
                     accept="image/*"
-                    onChange={e => setImage(e.target.files[0])}
+                    onChange={(e) => setImage(e.target.files[0])}
                     id="validationFormik107"
                     feedbackTooltip
                   />

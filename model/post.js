@@ -14,7 +14,7 @@ const postSchema = new mongoose.Schema({
     required: true,
   },
   image: {
-    type: Buffer
+    type: String
   },
   upVotedBy: [{ type: String }],
   downVotedBy: [{ type: String }],

@@ -3,30 +3,11 @@ const auth = require("../middleware/auth");
 const Community = require("../model/community");
 const Post = require("../model/post");
 const postRoute = express.Router();
-const multer = require("multer");
-
-const upload = multer({
-  limits: {
-    fileSize: 2000000,
-  },
-});
-
-postRoute.post("/create-post/image", auth, upload.single("image"),async (req, res) => {
-  try {
-    const postId = req.header("post-id-token");
-    const post = await Post.findById(postId)
-    post.image = req.file.buffer;
-    await post.save()
-    res.send();
-  } catch(err) {
-    res.status(500).json({ error: err.message });
-  }
-})
 
 // create a post
 postRoute.post("/create-post", auth, async (req, res) => {
   try {
-    const { title, description, community } = req.body;
+    const { title, description, community, imageUrl } = req.body;
 
     if (!title || !description || !community) {
       return res.status(400).json({ msg: "Please enter all the fields" });
@@ -42,6 +23,7 @@ postRoute.post("/create-post", auth, async (req, res) => {
       description,
       title,
       community,
+      image: imageUrl
     });
     newPost = await newPost.save();
     existingCommunity.posts = existingCommunity.posts.concat(newPost._id);

@@ -5,19 +5,63 @@ const Post = require("../model/post");
 const User = require("../model/user");
 const postRoute = express.Router();
 
+// upvoting a post
+postRoute.post("/post/upvote/:id", auth, async (req, res) => {
+  try {
+    const postId = req.params.id;
+    const post = await Post.findById(postId);
+    if(!post) {
+      return res.status(404).json({msg: "Post does not exist"})
+    }
+    if(post.upVotedBy.includes(req.user)) {
+      return res.json({msg: "Already Upvoted!"})
+    }
+    if(post.downVotedBy.includes(req.user)) {
+      const index = post.downVotedBy.indexOf(req.user)
+      post.downVotedBy.splice(index, 1);
+    }
+    post.upVotedBy.push(req.user);
+    await post.save();
+    res.json();
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+postRoute.post("/post/downvote/:id", auth, async (req, res) => {
+  try {
+    const postId = req.params.id;
+    const post = await Post.findById(postId);
+    if(!post) {
+      return res.status(404).json({msg: "Post does not exist"})
+    }
+    if(post.downVotedBy.includes(req.user)) {
+      return res.json({msg: "Already Downvoted!"})
+    }
+    if(post.upVotedBy.includes(req.user)) {
+      const index = post.upVotedBy.indexOf(req.user)
+      post.upVotedBy.splice(index, 1);
+    }
+    post.downVotedBy.push(req.user);
+    await post.save();
+    res.json();
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
 // get all the posts the user is subscribed to
 postRoute.get("/posts/user/:id", auth, async (req, res) => {
   try {
     const communities = await Community.find({ subscribedBy: req.params.id });
     let posts = [];
-    let userName = [];
-    for(let i =0; i<communities.length; i++) {
-      for(let j =0; j<communities[i].posts.length; j++) {
-        const post = await Post.find({_id: communities[i].posts[j]})
-        posts.push(post[0])
+    for (let i = 0; i < communities.length; i++) {
+      for (let j = 0; j < communities[i].posts.length; j++) {
+        const post = await Post.find({ _id: communities[i].posts[j] });
+        posts.push(post[0]);
       }
     }
-    res.json(posts)
+    res.json(posts);
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
@@ -44,7 +88,7 @@ postRoute.post("/create-post", auth, async (req, res) => {
       title,
       community,
       image: imageUrl,
-      username: user.username
+      username: user.username,
     });
     newPost = await newPost.save();
     existingCommunity.posts = existingCommunity.posts.concat(newPost._id);

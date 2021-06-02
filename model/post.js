@@ -14,10 +14,14 @@ const postSchema = new mongoose.Schema({
     required: true,
   },
   image: {
-    type: String
+    type: String,
   },
   upVotedBy: [{ type: String }],
   downVotedBy: [{ type: String }],
+  username: {
+    required: true,
+    type: String,
+  },
   title: {
     type: String,
     required: true,

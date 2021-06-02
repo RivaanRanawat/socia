@@ -7,15 +7,17 @@ function Feed() {
   const { userData } = useContext(UserContext);
   const [posts, setPosts] = useState([]);
   async function fetchPosts() {
-    const res = await axios.get("http://localhost:3001/posts", {
-      headers: { "x-auth-token": userData.token },
-    });
+    const res = await axios.get(
+      `http://localhost:3001/posts/user/${userData.user.id}`,
+      {
+        headers: { "x-auth-token": userData.token },
+      }
+    );
     res.data.map((post) =>
       setPosts((newPost) => [...newPost, Object.values(post)])
     );
-    console.log(posts)
   }
-
+  
   useEffect(() => {
     fetchPosts();
   }, []);

@@ -27,22 +27,24 @@ function CreatePost() {
       if (image) {
         const formData = new FormData();
         formData.append("file", image);
-        formData.append("upload_preset", "redditClone")
+        formData.append("upload_preset", "redditClone");
         const dataRes = await axios.post(
           "https://api.cloudinary.com/v1_1/dukvdqevm/image/upload",
           formData
         );
-        imageUrl = dataRes.data.url
+        imageUrl = dataRes.data.url;
       }
-      const submitPost = { title, description, community: selectedCommunity, imageUrl };
+      
+      const submitPost = {
+        title,
+        description,
+        community: selectedCommunity,
+        imageUrl,
+      };
       console.log(selectedCommunity);
-      await axios.post(
-        "http://localhost:3001/create-post",
-        submitPost,
-        {
-          headers: { "x-auth-token": userData.token },
-        }
-      );
+      await axios.post("http://localhost:3001/create-post", submitPost, {
+        headers: { "x-auth-token": userData.token },
+      });
       setLoading(false);
       history.push("/");
     } catch (err) {
@@ -68,8 +70,14 @@ function CreatePost() {
           headers: { "x-auth-token": token },
         }
       );
-      commRes.data.map((e) => setCommunities((oldArr) => [...oldArr, e.name]));
-      setSelectedCommunity(commRes.data[0].name);
+      if (commRes.data.length > 0) {
+        commRes.data.map((e) =>
+          setCommunities((oldArr) => [...oldArr, e.name])
+        );
+        setSelectedCommunity(commRes.data[0].name);
+      } else {
+        setError("Please join/create a community before creating a post!")
+      }
     };
     fetchCommunities();
   }, []);

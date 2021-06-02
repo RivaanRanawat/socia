@@ -13,7 +13,7 @@ function PostCard({ post }) {
           <Card>
             <Card.Header as="p">
               Posted at <strong>r/{post[6]}</strong> by{" "}
-              <strong>u/rivaanranawat</strong>
+              <strong>u/{post[8]}</strong>
             </Card.Header>
             <Card.Body>
               <Row>

@@ -1,6 +1,5 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect } from "react";
 import { Card, Alert, Form, Button, Container } from "react-bootstrap";
-import UserContext from "../context/UserContext";
 import { useHistory } from "react-router-dom";
 import axios from "axios";
 
@@ -34,7 +33,7 @@ function CreatePost() {
         );
         imageUrl = dataRes.data.url;
       }
-      
+
       const submitPost = {
         title,
         description,

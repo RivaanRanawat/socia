@@ -18,7 +18,7 @@ function CreateCommunity() {
     setLoading(true);
     try {
       const submitUser = { name, description, topic };
-      const submitUserRes = await axios.post(
+      await axios.post(
         "http://localhost:3001/create-community",
         submitUser,
         { headers: { "x-auth-token": userDetails.userData.token } }

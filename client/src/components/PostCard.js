@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Card, Container, Col, Row } from "react-bootstrap";
-import { BiUpvote, BiDownvote, BiComment } from "react-icons/bi";
+import { BiUpvote, BiDownvote } from "react-icons/bi";
 
 function PostCard({ post }) {
   const [count, setCount] = useState("0");
@@ -41,7 +41,7 @@ function PostCard({ post }) {
                 </Col>
                 <Col xs={11}>
                   <Card.Title>{post[5]}</Card.Title>
-                  {post[7] != "" ? (
+                  {post[7] !== "" ? (
                     <a href={post[7]}>
                       <Card.Img
                         style={{ height: "20rem" }}

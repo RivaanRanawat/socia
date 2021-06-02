@@ -15,6 +15,7 @@ function Feed() {
           headers: { "x-auth-token": userData.token },
         }
       );
+      console.log(res.data)
       res.data.map((post) =>
         setPosts((newPost) => [...newPost, Object.values(post)])
       );

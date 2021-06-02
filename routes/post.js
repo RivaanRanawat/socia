@@ -5,6 +5,20 @@ const Post = require("../model/post");
 const User = require("../model/user");
 const postRoute = express.Router();
 
+postRoute.get("/post/get-count/:id", auth, async (req, res) => {
+  try {
+    const postId = req.params.id;
+    const post = await Post.findById(postId);
+    if(!post) {
+      return res.status(404).json({msg: "Post does not exist"})
+    }
+    const count = (post.upVotedBy.length - post.downVotedBy.length).toString()
+    res.json(count);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+})
+
 // upvoting a post
 postRoute.post("/post/upvote/:id", auth, async (req, res) => {
   try {
@@ -28,6 +42,7 @@ postRoute.post("/post/upvote/:id", auth, async (req, res) => {
   }
 });
 
+//downvoting a post
 postRoute.post("/post/downvote/:id", auth, async (req, res) => {
   try {
     const postId = req.params.id;

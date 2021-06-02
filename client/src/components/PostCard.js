@@ -1,9 +1,60 @@
-import React, { useState } from "react";
+import axios from "axios";
+import React, { useState, useEffect, useContext } from "react";
 import { Card, Container, Col, Row } from "react-bootstrap";
-import { BiUpvote, BiDownvote } from "react-icons/bi";
+import { AiFillCaretDown, AiFillCaretUp } from "react-icons/ai";
+import UserContext from "../context/UserContext";
 
 function PostCard({ post }) {
   const [count, setCount] = useState("0");
+  const [isUpVoted, setIsUpVoted] = useState(false);
+  const [isDownVoted, setIsDownVoted] = useState(false);
+  const { userData } = useContext(UserContext);
+
+  const calculateCounts = async () => {
+    const res = await axios.get(
+      `http://localhost:3001/post/get-count/${post[2]}`,
+      {
+        headers: { "x-auth-token": userData.token },
+      }
+    );
+    setCount(res.data);
+  };
+
+  useEffect(() => {
+    if (post[0].includes(userData.user.id)) {
+      setIsUpVoted(true);
+    }
+    if (post[1].includes(userData.user.id)) {
+      setIsDownVoted(true);
+    }
+    calculateCounts();
+  }, []);
+
+  const upvoteHandler = async () => {
+    try {
+      await axios.post(`http://localhost:3001/post/upvote/${post[2]}`, null, {
+        headers: { "x-auth-token": userData.token },
+      });
+      calculateCounts();
+      setIsDownVoted(false);
+      setIsUpVoted(true);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const downvoteHandler = async () => {
+    try {
+      await axios.post(`http://localhost:3001/post/downvote/${post[2]}`, null, {
+        headers: { "x-auth-token": userData.token },
+      });
+      calculateCounts();
+      setIsUpVoted(false);
+      setIsDownVoted(true);
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
   return (
     <Container className="mt-2">
@@ -12,7 +63,7 @@ function PostCard({ post }) {
         <Col xs={7}>
           <Card>
             <Card.Header as="p">
-              Posted at <strong>r/{post[6]}</strong> by{" "}
+              Posted at <strong>s/{post[6]}</strong> by{" "}
               <strong>u/{post[8]}</strong>
             </Card.Header>
             <Card.Body>
@@ -20,21 +71,28 @@ function PostCard({ post }) {
                 <Col>
                   <Row>
                     <Col xs={5}>
-                      <BiUpvote
+                      <AiFillCaretUp
                         size="2rem"
-                        style={{ color: "#000", cursor: "pointer" }}
-                        onClick={() => console.log("hi")}
+                        style={{
+                          color: isUpVoted ? "#0000FF" : "#000",
+                          cursor: "pointer",
+                        }}
+                        onClick={upvoteHandler}
                       />
                     </Col>
                     <Col>
                       <h5 className="mt-1" style={{ cursor: "default" }}>
-                        {count}
+                        {count.length == 1 ? `0${count}` : count}
                       </h5>
                     </Col>
                     <Col xs={5}>
-                      <BiDownvote
+                      <AiFillCaretDown
                         size="2rem"
-                        style={{ color: "#000", cursor: "pointer" }}
+                        style={{
+                          color: isDownVoted ? "#0000FF" : "#000",
+                          cursor: "pointer",
+                        }}
+                        onClick={downvoteHandler}
                       />
                     </Col>
                   </Row>

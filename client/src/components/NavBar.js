@@ -13,6 +13,7 @@ function NavBar() {
         <Form inline>
           <FormControl type="text" placeholder="Search" className="mr-sm-2" />
         </Form>
+        <Nav.Link href="/login" style={{color: "red"}} onClick={() => localStorage.removeItem("auth-token")}>Log Out</Nav.Link>
       </Navbar.Collapse>
     </Navbar>
   );

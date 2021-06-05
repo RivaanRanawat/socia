@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from "react";
 import UserContext from "../context/UserContext";
 import PostCard from "./PostCard";
 import axios from "axios";
-import { Container, Row, Col } from "react-bootstrap";
+import { Container, Row, Col, Card } from "react-bootstrap";
 
 function Feed() {
   const { userData } = useContext(UserContext);
@@ -34,7 +34,39 @@ function Feed() {
           ))}
         </Col>
         <Col className="mt-2">
-            hi
+          <Card>
+            <Card.Body className="d-flex flex-column align-items-center text-center">
+              <img
+                src="https://bootdey.com/img/Content/avatar/avatar7.png"
+                alt="Profile"
+                class="rounded-circle"
+                width="150"
+              />
+              <div class="mt-3">
+                <h4>Username</h4>
+                <Row>
+                  <Col>
+                    <Card.Text as="p" className="text-secondary mb-1">
+                      Posts
+                    </Card.Text>
+                    <Card.Text as="p">0</Card.Text>
+                  </Col>
+                  <Col>
+                    <Card.Text as="p" className="text-secondary mb-1">
+                      Communities
+                    </Card.Text>
+                    <Card.Text as="p">1</Card.Text>
+                  </Col>
+                  <Col>
+                    <Card.Text as="p" className="text-secondary mb-1">
+                      Karma
+                    </Card.Text>
+                    <Card.Text as="p">2</Card.Text>
+                  </Col>
+                </Row>
+              </div>
+            </Card.Body>
+          </Card>
         </Col>
       </Row>
     </Container>

@@ -7,6 +7,8 @@ import { useState, useEffect } from "react";
 import UserContext from "./context/UserContext";
 import CreatePost from "./components/CreatePost";
 import CreateCommunity from "./components/CreateCommunity";
+import Communities from "./components/Communities";
+import NavBar from "./components/NavBar";
 
 function App() {
   const [userData, setUserData] = useState({
@@ -41,12 +43,14 @@ function App() {
   return (
     <BrowserRouter>
       <UserContext.Provider value={{ userData, setUserData }}>
+        <NavBar />
         <Switch>
           <Route exact path="/" component={Home} />
           <Route path="/signup" component={Signup} />
           <Route path="/login" component={Login} />
           <Route path="/create-post" component={CreatePost} />
           <Route path="/create-community" component={CreateCommunity} />
+          <Route path="/communities" component={Communities} />
         </Switch>
       </UserContext.Provider>
     </BrowserRouter>

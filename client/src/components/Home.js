@@ -11,7 +11,6 @@ function Home() {
     <div>
       {userData.user ? (
         <>
-          <NavBar />
           <Feed />
         </>
       ) : (

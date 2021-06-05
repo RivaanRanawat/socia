@@ -5,6 +5,7 @@ const Community = require("../model/community");
 const userRouter = express.Router();
 const jwt = require("jsonwebtoken");
 const auth = require("../middleware/auth");
+const Post = require("../model/post");
 
 // Signup Route
 userRouter.post("/signup", async (req, res) => {
@@ -82,9 +83,14 @@ userRouter.post("/tokenIsValid", async (req, res) => {
 // to get the users credentials
 userRouter.get("/", auth, async (req, res) => {
   const user = await User.findById(req.user);
+  const posts = await Post.find({uid: user._id})
+  const communities = await Community.find({creator: user._id})
   res.json({
     username: user.username,
     id: user._id,
+    avatar: user.avatar,
+    postCount: posts.length.toString(),
+    communityCount: communities.length.toString()
   });
 });
 

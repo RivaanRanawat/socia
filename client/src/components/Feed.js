@@ -37,31 +37,35 @@ function Feed() {
           <Card>
             <Card.Body className="d-flex flex-column align-items-center text-center">
               <img
-                src="https://bootdey.com/img/Content/avatar/avatar7.png"
+                src={
+                  userData.user.avatar === ""
+                    ? `https://image.freepik.com/free-vector/man-avatar-profile-round-icon_24640-14046.jpg`
+                    : userData.user.avatar
+                }
                 alt="Profile"
-                class="rounded-circle"
+                className="rounded-circle"
                 width="150"
               />
               <div class="mt-3">
-                <h4>Username</h4>
+                <h4>{userData.user.username}</h4>
                 <Row>
                   <Col>
                     <Card.Text as="p" className="text-secondary mb-1">
                       Posts
                     </Card.Text>
-                    <Card.Text as="p">0</Card.Text>
+                    <Card.Text as="p">{userData.user.postCount}</Card.Text>
                   </Col>
                   <Col>
                     <Card.Text as="p" className="text-secondary mb-1">
                       Communities
                     </Card.Text>
-                    <Card.Text as="p">1</Card.Text>
+                    <Card.Text as="p">{userData.user.communityCount}</Card.Text>
                   </Col>
                   <Col>
                     <Card.Text as="p" className="text-secondary mb-1">
                       Karma
                     </Card.Text>
-                    <Card.Text as="p">2</Card.Text>
+                    <Card.Text as="p">0</Card.Text>
                   </Col>
                 </Row>
               </div>

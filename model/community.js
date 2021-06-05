@@ -36,6 +36,9 @@ const communitySchema = new mongoose.Schema({
     type: Number,
     default: 1,
   },
+  iconUrl: {
+    type: String
+  }
 });
 
 const Community = mongoose.model("Community", communitySchema);

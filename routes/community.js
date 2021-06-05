@@ -9,7 +9,7 @@ const Post = require("../model/post");
 // Creating a community
 communityRouter.post("/create-community", auth, async (req, res) => {
   try {
-    const { name, description, topic } = req.body;
+    const { name, description, topic, iconUrl } = req.body;
     if (!name || !description) {
       return res.status(400).json({ msg: "Please enter name and description" });
     }
@@ -27,6 +27,7 @@ communityRouter.post("/create-community", auth, async (req, res) => {
       topic: topicDb,
       creator,
       subscribedBy: [creator],
+      iconUrl
     });
     newCommunity = await newCommunity.save();
     let creatorDetails = await User.findById(creator);

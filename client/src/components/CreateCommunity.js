@@ -10,6 +10,7 @@ function CreateCommunity() {
   const [description, setDescription] = useState();
   const [topic, setTopic] = useState();
   const [loading, setLoading] = useState(false);
+  const [image, setImage] = useState();
   const userDetails = useContext(UserContext);
   const history = useHistory();
 
@@ -17,12 +18,22 @@ function CreateCommunity() {
     e.preventDefault();
     setLoading(true);
     try {
-      const submitUser = { name, description, topic };
-      await axios.post(
-        "http://localhost:3001/create-community",
-        submitUser,
-        { headers: { "x-auth-token": userDetails.userData.token } }
-      );
+      let iconUrl = "";
+      if (image) {
+        const formData = new FormData();
+        formData.append("file", image);
+        formData.append("upload_preset", "redditClone");
+        const dataRes = await axios.post(
+          "https://api.cloudinary.com/v1_1/dukvdqevm/image/upload",
+          formData
+        );
+        iconUrl = dataRes.data.url;
+      }
+      
+      const submitUser = { name, description, topic, iconUrl };
+      await axios.post("http://localhost:3001/create-community", submitUser, {
+        headers: { "x-auth-token": userDetails.userData.token },
+      });
       history.push("/");
       setLoading(false);
     } catch (err) {
@@ -43,6 +54,17 @@ function CreateCommunity() {
               <h2 className="text-center mb-4">Create Community</h2>
               {error && <Alert variant="danger">{error}</Alert>}
               <Form onSubmit={handleSubmit}>
+                <Form.Group>
+                  <Form.Label>Icon</Form.Label>
+                  <Form.File
+                    className="position-relative"
+                    name="file"
+                    accept="image/*"
+                    onChange={(e) => setImage(e.target.files[0])}
+                    id="validationFormik107"
+                    feedbackTooltip
+                  />
+                </Form.Group>
                 <Form.Group id="name">
                   <Form.Label>Name</Form.Label>
                   <Form.Control

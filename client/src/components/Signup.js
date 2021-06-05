@@ -10,6 +10,7 @@ function Signup() {
   const [password, setPassword] = useState();
   const [confirmPassword, setConfirmPassword] = useState();
   const [username, setUsername] = useState();
+  const [image, setImage] = useState();
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
@@ -21,7 +22,19 @@ function Signup() {
     e.preventDefault();
     setLoading(true);
     try {
-      const newUser = { email, password, confirmPassword, username };
+      let avatar = "";
+      if (image) {
+        const formData = new FormData();
+        formData.append("file", image);
+        formData.append("upload_preset", "redditClone");
+        const dataRes = await axios.post(
+          "https://api.cloudinary.com/v1_1/dukvdqevm/image/upload",
+          formData
+        );
+        avatar = dataRes.data.url;
+      }
+
+      const newUser = { email, password, confirmPassword, username, avatar };
       await axios.post("http://localhost:3001/signup", newUser);
       const loginRes = await axios.post("http://localhost:3001/login", {
         email,
@@ -51,6 +64,17 @@ function Signup() {
               <h2 className="text-center mb-4">Sign Up</h2>
               {error && <Alert variant="danger">{error}</Alert>}
               <Form onSubmit={handleSubmit}>
+                <Form.Group>
+                  <Form.Label>Profile Photo</Form.Label>
+                  <Form.File
+                    className="position-relative"
+                    name="file"
+                    accept="image/*"
+                    onChange={(e) => setImage(e.target.files[0])}
+                    id="validationFormik107"
+                    feedbackTooltip
+                  />
+                </Form.Group>
                 <Form.Group id="username">
                   <Form.Label>Username</Form.Label>
                   <Form.Control

@@ -58,67 +58,60 @@ function PostCard({ post }) {
 
   return (
     <Container className="mt-2">
-      <Row>
-        <Col xs={2}></Col>
-        <Col xs={7}>
-          <Card>
-            <Card.Header as="p">
-              Posted at <strong>s/{post[6]}</strong> by{" "}
-              <strong>u/{post[8]}</strong>
-            </Card.Header>
-            <Card.Body>
+      <Card>
+        <Card.Header as="p">
+          Posted at <strong>s/{post[6]}</strong> by <strong>u/{post[8]}</strong>
+        </Card.Header>
+        <Card.Body>
+          <Row>
+            <Col>
               <Row>
-                <Col>
-                  <Row>
-                    <Col xs={5}>
-                      <AiFillCaretUp
-                        size="2rem"
-                        style={{
-                          color: isUpVoted ? "#0000FF" : "#000",
-                          cursor: "pointer",
-                        }}
-                        onClick={upvoteHandler}
-                      />
-                    </Col>
-                    <Col>
-                      <h5 className="mt-1" style={{ cursor: "default" }}>
-                        {count.length == 1 ? `0${count}` : count}
-                      </h5>
-                    </Col>
-                    <Col xs={5}>
-                      <AiFillCaretDown
-                        size="2rem"
-                        style={{
-                          color: isDownVoted ? "#0000FF" : "#000",
-                          cursor: "pointer",
-                        }}
-                        onClick={downvoteHandler}
-                      />
-                    </Col>
-                  </Row>
+                <Col xs={5}>
+                  <AiFillCaretUp
+                    size="2rem"
+                    style={{
+                      color: isUpVoted ? "#0000FF" : "#000",
+                      cursor: "pointer",
+                    }}
+                    onClick={upvoteHandler}
+                  />
                 </Col>
-                <Col xs={11}>
-                  <Card.Title>{post[5]}</Card.Title>
-                  {post[7] !== "" ? (
-                    <a href={post[7]}>
-                      <Card.Img
-                        style={{ height: "20rem" }}
-                        className="mt-1 mr-2"
-                        variant="top"
-                        src={post[7]}
-                      />
-                    </a>
-                  ) : (
-                    <></>
-                  )}
-                  <Card.Text className="mt-1">{post[4]}</Card.Text>
+                <Col>
+                  <h5 className="mt-1" style={{ cursor: "default" }}>
+                    {count.length == 1 ? `0${count}` : count}
+                  </h5>
+                </Col>
+                <Col xs={5}>
+                  <AiFillCaretDown
+                    size="2rem"
+                    style={{
+                      color: isDownVoted ? "#0000FF" : "#000",
+                      cursor: "pointer",
+                    }}
+                    onClick={downvoteHandler}
+                  />
                 </Col>
               </Row>
-            </Card.Body>
-          </Card>
-        </Col>
-        <Col></Col>
-      </Row>
+            </Col>
+            <Col xs={11}>
+              <Card.Title>{post[5]}</Card.Title>
+              {post[7] !== "" ? (
+                <a href={post[7]}>
+                  <Card.Img
+                    style={{ height: "20rem" }}
+                    className="mt-1 mr-2"
+                    variant="top"
+                    src={post[7]}
+                  />
+                </a>
+              ) : (
+                <></>
+              )}
+              <Card.Text className="mt-1">{post[4]}</Card.Text>
+            </Col>
+          </Row>
+        </Card.Body>
+      </Card>
     </Container>
   );
 }

@@ -9,7 +9,7 @@ const auth = require("../middleware/auth");
 // Signup Route
 userRouter.post("/signup", async (req, res) => {
   try {
-    const { email, password, confirmPassword, username } = req.body;
+    const { email, password, confirmPassword, username, avatar } = req.body;
     if (!email || !password || !username || !confirmPassword) {
       return res.status(400).json({ msg: "Please enter all the fields" });
     }
@@ -28,7 +28,7 @@ userRouter.post("/signup", async (req, res) => {
         .json({ msg: "User with the same email already exists" });
     }
     const hashedPassword = await bcryptjs.hash(password, 8);
-    const newUser = new User({ email, password: hashedPassword, username });
+    const newUser = new User({ email, password: hashedPassword, username, avatar });
 
     const savedUser = await newUser.save();
     res.json(savedUser);

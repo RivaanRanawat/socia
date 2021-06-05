@@ -89,6 +89,7 @@ userRouter.get("/", auth, async (req, res) => {
     username: user.username,
     id: user._id,
     avatar: user.avatar,
+    karma: user.karma,
     postCount: posts.length.toString(),
     communityCount: communities.length.toString()
   });

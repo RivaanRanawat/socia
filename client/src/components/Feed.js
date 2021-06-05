@@ -65,7 +65,7 @@ function Feed() {
                     <Card.Text as="p" className="text-secondary mb-1">
                       Karma
                     </Card.Text>
-                    <Card.Text as="p">0</Card.Text>
+                    <Card.Text as="p">{userData.user.karma}</Card.Text>
                   </Col>
                 </Row>
               </div>

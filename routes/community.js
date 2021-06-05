@@ -6,6 +6,15 @@ const auth = require("../middleware/auth");
 const User = require("../model/user");
 const Post = require("../model/post");
 
+/*
+Karma:
+3-> Posting
+5-> Creating Community
+2-> Joining Community
+1-> getting upvotes
+2-> getting comments
+*/
+
 // Creating a community
 communityRouter.post("/create-community", auth, async (req, res) => {
   try {
@@ -20,6 +29,9 @@ communityRouter.post("/create-community", auth, async (req, res) => {
         .json({ msg: "Community with the same name already exists" });
     }
     let topicDb = topic ?? "";
+    const user = await User.findById(req.user)
+    user.karma +=5;
+    await user.save()
     const creator = req.user;
     let newCommunity = new Community({
       name,

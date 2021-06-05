@@ -5,35 +5,53 @@ const Post = require("../model/post");
 const User = require("../model/user");
 const postRoute = express.Router();
 
+/*
+Karma:
+3-> Posting
+5-> Creating Community
+2-> Joining Community
+1-> getting upvotes
+2-> getting comments
+*/
+
 postRoute.get("/post/get-count/:id", auth, async (req, res) => {
   try {
     const postId = req.params.id;
     const post = await Post.findById(postId);
-    if(!post) {
-      return res.status(404).json({msg: "Post does not exist"})
+    if (!post) {
+      return res.status(404).json({ msg: "Post does not exist" });
     }
-    const count = (post.upVotedBy.length - post.downVotedBy.length).toString()
+    const count = (post.upVotedBy.length - post.downVotedBy.length).toString();
     res.json(count);
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
-})
+});
 
 // upvoting a post
 postRoute.post("/post/upvote/:id", auth, async (req, res) => {
   try {
     const postId = req.params.id;
     const post = await Post.findById(postId);
-    if(!post) {
-      return res.status(404).json({msg: "Post does not exist"})
+    if (!post) {
+      return res.status(404).json({ msg: "Post does not exist" });
     }
-    if(post.upVotedBy.includes(req.user)) {
-      return res.json({msg: "Already Upvoted!"})
+
+    const user = await User.findById(post.uid);
+    if (!user) {
+      return res.json({ msg: "User has been deleted!" });
     }
-    if(post.downVotedBy.includes(req.user)) {
-      const index = post.downVotedBy.indexOf(req.user)
+
+    if (post.upVotedBy.includes(req.user)) {
+      return res.json({ msg: "Already Upvoted!" });
+    }
+    if (post.downVotedBy.includes(req.user)) {
+      const index = post.downVotedBy.indexOf(req.user);
       post.downVotedBy.splice(index, 1);
     }
+
+    user.karma += 1;
+    await user.save();
     post.upVotedBy.push(req.user);
     await post.save();
     res.json();
@@ -47,14 +65,14 @@ postRoute.post("/post/downvote/:id", auth, async (req, res) => {
   try {
     const postId = req.params.id;
     const post = await Post.findById(postId);
-    if(!post) {
-      return res.status(404).json({msg: "Post does not exist"})
+    if (!post) {
+      return res.status(404).json({ msg: "Post does not exist" });
     }
-    if(post.downVotedBy.includes(req.user)) {
-      return res.json({msg: "Already Downvoted!"})
+    if (post.downVotedBy.includes(req.user)) {
+      return res.json({ msg: "Already Downvoted!" });
     }
-    if(post.upVotedBy.includes(req.user)) {
-      const index = post.upVotedBy.indexOf(req.user)
+    if (post.upVotedBy.includes(req.user)) {
+      const index = post.upVotedBy.indexOf(req.user);
       post.upVotedBy.splice(index, 1);
     }
     post.downVotedBy.push(req.user);
@@ -97,6 +115,7 @@ postRoute.post("/create-post", auth, async (req, res) => {
     }
 
     const user = await User.findById(req.user);
+    user.karma += 3;
     let newPost = new Post({
       uid: req.user,
       description,
@@ -105,6 +124,8 @@ postRoute.post("/create-post", auth, async (req, res) => {
       image: imageUrl,
       username: user.username,
     });
+
+    await user.save();
     newPost = await newPost.save();
     existingCommunity.posts = existingCommunity.posts.concat(newPost._id);
     await existingCommunity.save();

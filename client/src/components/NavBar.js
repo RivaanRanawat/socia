@@ -1,7 +1,17 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Form, Navbar, FormControl, Nav } from "react-bootstrap";
+import { Redirect } from "react-router";
 
 function NavBar() {
+  const [token, setToken] = useState();
+  useEffect(() => {
+    setToken(localStorage.getItem("auth-token"));
+  }, []);
+
+  if (!token) {
+    return <div></div>;
+  }
+
   return (
     <Navbar bg="light" variant="light">
       <Navbar.Brand href="/">Socia</Navbar.Brand>
@@ -14,7 +24,13 @@ function NavBar() {
         <Form inline>
           <FormControl type="text" placeholder="Search" className="mr-sm-2" />
         </Form>
-        <Nav.Link href="/login" style={{color: "red"}} onClick={() => localStorage.removeItem("auth-token")}>Log Out</Nav.Link>
+        <Nav.Link
+          href="/login"
+          style={{ color: "red" }}
+          onClick={() => localStorage.removeItem("auth-token")}
+        >
+          Log Out
+        </Nav.Link>
       </Navbar.Collapse>
     </Navbar>
   );

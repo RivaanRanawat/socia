@@ -9,6 +9,7 @@ import CreatePost from "./components/CreatePost";
 import CreateCommunity from "./components/CreateCommunity";
 import Communities from "./components/Communities";
 import NavBar from "./components/NavBar";
+import Community from "./components/Community";
 
 function App() {
   const [userData, setUserData] = useState({
@@ -51,6 +52,7 @@ function App() {
           <Route path="/create-post" component={CreatePost} />
           <Route path="/create-community" component={CreateCommunity} />
           <Route path="/communities" component={Communities} />
+          <Route path="/community/s/:name" component={Community} />
         </Switch>
       </UserContext.Provider>
     </BrowserRouter>

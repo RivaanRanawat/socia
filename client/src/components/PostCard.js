@@ -3,6 +3,7 @@ import React, { useState, useEffect, useContext } from "react";
 import { Card, Container, Col, Row } from "react-bootstrap";
 import { AiFillCaretDown, AiFillCaretUp } from "react-icons/ai";
 import UserContext from "../context/UserContext";
+import { Link } from "react-router-dom";
 
 function PostCard({ post }) {
   const [count, setCount] = useState("0");
@@ -21,6 +22,7 @@ function PostCard({ post }) {
   };
 
   useEffect(() => {
+    console.log(post);
     if (post[0].includes(userData.user.id)) {
       setIsUpVoted(true);
     }
@@ -60,7 +62,14 @@ function PostCard({ post }) {
     <Container className="mt-2">
       <Card>
         <Card.Header as="p">
-          Posted at <strong>s/{post[6]}</strong> by <strong>u/{post[8]}</strong>
+          Posted at{" "}
+          <Link
+            to={`/community/s/${post[6]}`}
+            style={{ color: "#000", textDecoration: "none" }}
+          >
+            <strong>s/{post[6]}</strong>
+          </Link>{" "}
+          by <strong>u/{post[8]}</strong>
         </Card.Header>
         <Card.Body>
           <Row>

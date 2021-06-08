@@ -94,6 +94,13 @@ postRoute.get("/posts/user/:id", auth, async (req, res) => {
         posts.push(post[0]);
       }
     }
+    posts = posts.sort(function (a, b) {
+      if (a.date > b.date) {
+        return -1;
+      } else {
+        return 1;
+      }
+    });
     res.json(posts);
   } catch (err) {
     res.status(500).json({ error: err.message });

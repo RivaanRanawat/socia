@@ -84,7 +84,7 @@ userRouter.post("/tokenIsValid", async (req, res) => {
 userRouter.get("/", auth, async (req, res) => {
   const user = await User.findById(req.user);
   const posts = await Post.find({uid: user._id})
-  const communities = await Community.find({creator: user._id})
+  const communities = await Community.find({subscribedBy: user._id})
   res.json({
     username: user.username,
     id: user._id,

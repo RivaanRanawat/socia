@@ -87,7 +87,14 @@ communityRouter.get("/community/posts/:name", auth, async (req, res) => {
         .json({ msg: "Community with this name does not exist" });
     }
     let psts = community.posts.map(async (post) => await Post.findById(post));
-    const results = await Promise.all(psts);
+    let results = await Promise.all(psts);
+    results = results.sort(function (a, b) {
+      if (a.date > b.date) {
+        return -1;
+      } else {
+        return 1;
+      }
+    });
     res.json(results);
   } catch (err) {
     res.status(500).json({ error: err.message });
@@ -130,7 +137,7 @@ communityRouter.get("/isFollow/community/:id", auth, async (req, res) => {
 
 // unfollow a community
 communityRouter.post("/unfollow/community/:id", auth, async (req, res) => {
-  const id = req.params.id.substring(1, req.params.id.length);;
+  const id = req.params.id.substring(1, req.params.id.length);
   console.log(id);
   try {
     let community = await Community.findById(id);

@@ -7,13 +7,16 @@ import PostCard from "./PostCard";
 function Community() {
   let { name } = useParams();
   let [posts, setPosts] = useState([]);
+  let [isFollowing, setIsFollowing] = useState(false);
+  let [tokena, setTokena] = useState();
+  let [subscriberCount, setSubscriberCount] = useState(undefined);
   let [data, setData] = useState({
     name: undefined,
-    subscriberCount: undefined,
     description: undefined,
     topic: undefined,
     iconUrl: undefined,
     postCount: undefined,
+    id: undefined,
   });
   useEffect(() => {
     let token = localStorage.getItem("auth-token");
@@ -35,15 +38,26 @@ function Community() {
         );
         console.log(postRes.data);
         console.log(communityRes);
+        console.log(communityRes._id);
+
+        const followRes = await axios.get(
+          `http://localhost:3001/isFollow/community/:${communityRes._id}`,
+          {
+            headers: { "x-auth-token": token },
+          }
+        );
 
         setData({
           name: communityRes.name,
           description: communityRes.description,
           iconUrl: communityRes.iconUrl,
           topic: communityRes.topic,
-          subscriberCount: communityRes.subscriberCount,
           postCount: communityRes.posts.length,
+          id: communityRes._id,
         });
+        setSubscriberCount(communityRes.subscribedBy.length);
+        setTokena(token);
+        setIsFollowing(followRes.data);
         postRes.data.map((post) =>
           setPosts((newPost) => [...newPost, Object.values(post)])
         );
@@ -53,6 +67,41 @@ function Community() {
     };
     fetchCommunityData();
   }, []);
+
+  const handleFollow = async () => {
+    console.log(isFollowing);
+    try {
+      if (isFollowing === false) {
+        await axios.post(
+          `http://localhost:3001/follow/community/:${data.id}`,
+          null,
+          {
+            headers: { "x-auth-token": tokena },
+          }
+        );
+      } else {
+        await axios.post(
+          `http://localhost:3001/unfollow/community/:${data.id}`,
+          null,
+          {
+            headers: { "x-auth-token": tokena },
+          }
+        );
+      }
+      const followRes = await axios.get(
+        `http://localhost:3001/isFollow/community/:${data.id}`,
+        {
+          headers: { "x-auth-token": tokena },
+        }
+      );
+      followRes.data
+        ? setSubscriberCount(subscriberCount + 1)
+        : setSubscriberCount(subscriberCount - 1);
+      setIsFollowing(followRes.data);
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
   return (
     <Container className="mt-2">
@@ -93,10 +142,15 @@ function Community() {
                         <Card.Text as="p" className="text-secondary mb-1">
                           Followers
                         </Card.Text>
-                        <Card.Text as="p">{data.subscriberCount}</Card.Text>
+                        <Card.Text as="p">{subscriberCount}</Card.Text>
                       </Col>
                     </Row>
-                    <button className="btn btn-primary mt-1">Follow</button>
+                    <button
+                      className="btn btn-primary mt-1"
+                      onClick={handleFollow}
+                    >
+                      {!isFollowing ? "Follow" : "Unfollow"}
+                    </button>
                   </div>
                 </div>
               </Card.Body>

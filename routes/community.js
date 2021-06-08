@@ -78,8 +78,7 @@ communityRouter.get("/community/:name", auth, async (req, res) => {
 
 // get a specific communities post
 communityRouter.get("/community/posts/:name", auth, async (req, res) => {
-  const name = req.params.name.substring(1, req.params.length);
-  console.log("hi")
+  const name = req.params.name.substring(1, req.params.name.length);
   try {
     const community = await Community.findOne({ name });
     if (!community) {
@@ -87,10 +86,63 @@ communityRouter.get("/community/posts/:name", auth, async (req, res) => {
         .status(404)
         .json({ msg: "Community with this name does not exist" });
     }
-    console.log(community)
     let psts = community.posts.map(async (post) => await Post.findById(post));
     const results = await Promise.all(psts);
-    res.json(results)
+    res.json(results);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// follow a community
+communityRouter.post("/follow/community/:id", auth, async (req, res) => {
+  const id = req.params.id.substring(1, req.params.id.length);
+  console.log(id);
+  try {
+    let community = await Community.findById(id);
+    if (!community) {
+      return res.status(404).json({ msg: "Community Not Found" });
+    }
+    community.subscribedBy.push(req.user);
+    await community.save();
+    res.json();
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// check if a community is being followed by user
+communityRouter.get("/isFollow/community/:id", auth, async (req, res) => {
+  const id = req.params.id.substring(1, req.params.id.length);
+  try {
+    let community = await Community.findById(id);
+    if (!community) {
+      return res.status(404).json({ msg: "Community Not Found" });
+    }
+    if (!community.subscribedBy.includes(req.user)) {
+      return res.json(false);
+    }
+    res.json(true);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// unfollow a community
+communityRouter.post("/unfollow/community/:id", auth, async (req, res) => {
+  const id = req.params.id.substring(1, req.params.id.length);;
+  console.log(id);
+  try {
+    let community = await Community.findById(id);
+    if (!community) {
+      return res.status(404).json({ msg: "Community Not Found" });
+    }
+    const index = community.subscribedBy.indexOf(req.user);
+    if (index > -1) {
+      community.subscribedBy.splice(index, 1);
+    }
+    await community.save();
+    res.json();
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
